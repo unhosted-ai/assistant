@@ -1,0 +1,74 @@
+{
+  "version": "1.0.0",
+  "objective": "Route requests across local models by latency, risk, and reasoning depth.",
+  "models": {
+    "primary": {
+      "provider": "ollama",
+      "name": "qwen3:14b",
+      "role": "default_reasoning",
+      "targetLatencyMs": 3500
+    },
+    "fastFallback": {
+      "provider": "ollama",
+      "name": "qwen3:8b",
+      "role": "low_latency_and_battery",
+      "targetLatencyMs": 1800
+    },
+    "deepPlanner": {
+      "provider": "ollama",
+      "name": "deepseek-r1-distill-qwen-14b",
+      "role": "high_complexity_planning",
+      "targetLatencyMs": 8000
+    }
+  },
+  "routingRules": [
+    {
+      "id": "rule_low_power",
+      "comment": "Device constraints win first — a throttled/low-battery device must not run the big model.",
+      "when": {
+        "deviceState": ["battery_saver", "thermal_throttle"]
+      },
+      "useModel": "fastFallback"
+    },
+    {
+      "id": "rule_high_risk",
+      "comment": "Any high-risk request gets the careful planner, regardless of how short it is.",
+      "when": {
+        "riskLevel": ["high"]
+      },
+      "useModel": "deepPlanner"
+    },
+    {
+      "id": "rule_deep_path",
+      "comment": "Complex planning, even at lower risk, benefits from the deeper model.",
+      "when": {
+        "taskComplexity": ["high"]
+      },
+      "useModel": "deepPlanner"
+    },
+    {
+      "id": "rule_fast_path",
+      "comment": "Everything else — quick, low-risk asks — goes to the default model.",
+      "when": {
+        "taskComplexity": ["low", "medium"],
+        "riskLevel": ["low", "medium"]
+      },
+      "useModel": "primary"
+    },
+    {
+      "id": "rule_default",
+      "comment": "Catch-all so nothing ever falls through unrouted.",
+      "when": {},
+      "useModel": "primary"
+    }
+  ],
+  "escalation": {
+    "maxSelfRetries": 2,
+    "retryOnLowConfidenceBelow": 0.55,
+    "handoffToDeepPlannerAfterFailures": 1
+  },
+  "guardrails": {
+    "requireReversiblePlanForHighRisk": true,
+    "allowCloudFallback": false
+  }
+}

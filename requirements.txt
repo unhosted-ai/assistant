@@ -1,0 +1,2 @@
+# The assistant core has NO runtime dependencies — it talks to local models over
+# plain HTTP (Python stdlib). Local-first by design.
