@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "unhosted-assistant"
+version = "0.1.0"
+description = "A clean, local-first AI assistant on the Unhosted core — auto-uses your Unhosted cluster, else Ollama or any OpenAI-compatible server. No cloud, no API key."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [{ name = "Ankur Sinha" }]
+keywords = ["ai", "assistant", "local-first", "llm", "ollama", "unhosted", "agent"]
+
+# The core has NO runtime dependencies — it talks to local models over stdlib HTTP.
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/unhosted-ai/assistant"
+Source = "https://github.com/unhosted-ai/assistant"
+
+[project.scripts]
+# installs a `ua` command (and a longer alias)
+ua = "unhosted_assistant.cli:main"
+unhosted-assistant = "unhosted_assistant.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["unhosted_assistant"]
+
+# ship the routing policy alongside the package
+[tool.hatch.build.targets.wheel.force-include]
+"policies/model-routing.policy.json" = "unhosted_assistant/policies/model-routing.policy.json"

@@ -85,7 +85,11 @@ def load_policy(path: Path | None = None) -> dict[str, Any]:
     """Load the routing policy JSON, falling back to a safe default."""
     candidates = (
         [path] if path is not None else [
+            # source-tree layout (dev)
             Path(__file__).resolve().parents[2] / "policies" / "model-routing.policy.json",
+            # bundled inside the installed package (wheel)
+            Path(__file__).resolve().parents[1] / "policies" / "model-routing.policy.json",
+            # a policy in the current working directory
             Path.cwd() / "policies" / "model-routing.policy.json",
         ]
     )

@@ -27,6 +27,14 @@ to do real things: tell the time, read files, search the web, fetch a page.
 This is the general assistant. (The personal "digital twin" — voice cloning,
 persona, private memory — lives in a separate project.)
 
+## Install
+
+```bash
+pip install .            # or: uv pip install .
+```
+
+This gives you a `ua` command. (Or run from source with `python -m unhosted_assistant`.)
+
 ## Quick start
 
 ```bash
@@ -34,7 +42,7 @@ persona, private memory — lives in a separate project.)
 ollama pull qwen2.5:7b        # or llama3.2, etc.
 
 # 2. run it
-python -m unhosted_assistant "what's the date?"
+ua "what's the date?"
 python -m unhosted_assistant                       # interactive REPL
 python -m unhosted_assistant --models              # list available models
 python -m unhosted_assistant --route-explain "..." # show which model was chosen
