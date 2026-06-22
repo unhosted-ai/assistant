@@ -133,7 +133,7 @@ def classify(prompt: str) -> tuple[str, str, list[str]]:
 
 def _device_state() -> str | None:
     """Optional device hint via env, honouring the policy's low-power rule.
-    e.g. CTWIN_DEVICE_STATE=battery_saver | thermal_throttle | normal
+    e.g. UA_DEVICE_STATE=battery_saver | thermal_throttle | normal
     """
     val = (os.environ.get("CTWIN_DEVICE_STATE") or "").strip().lower()
     return val or None

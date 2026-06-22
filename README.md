@@ -43,10 +43,10 @@ UA_WEB=1 python -m unhosted_assistant "what's new in AI today?"   # web on
 
 ## Model backends
 
-- **Unhosted** — auto-detected at `127.0.0.1:7777` (override `CTWIN_UNHOSTED_BASE`).
+- **Unhosted** — auto-detected at `127.0.0.1:7777` (override `UA_UNHOSTED_BASE`).
 - **Ollama** — `UA_OLLAMA_HOST` (default `http://localhost:11434`).
-- **OpenAI-compatible** (LM Studio etc.) — set `CTWIN_OPENAI_BASE` or
-  `CTWIN_USE_LMSTUDIO=1`.
+- **OpenAI-compatible** (LM Studio etc.) — set `UA_OPENAI_BASE` or
+  `UA_USE_LMSTUDIO=1`.
 
 Routing applies to local Ollama models; an explicit `--model` pins one and turns
 routing off.

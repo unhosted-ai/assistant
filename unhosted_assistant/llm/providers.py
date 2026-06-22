@@ -15,7 +15,7 @@ Model id scheme (kept backward-compatible):
     prefix is what /api/model uses to route to the right client.
 
 Everything is local-first and opt-in: the OpenAI backend is only probed when a
-base URL is configured (CTWIN_OPENAI_BASE / config), so default installs that
+base URL is configured (UA_OPENAI_BASE / config), so default installs that
 only use Ollama are unaffected.
 """
 
@@ -47,11 +47,11 @@ UNHOSTED_BASE = "http://127.0.0.1:7777/v1"
 
 def unhosted_base_url() -> str | None:
     """Return Unhosted's OpenAI-compatible base URL IF its daemon is reachable,
-    else None. Overridable with CTWIN_UNHOSTED_BASE; disable auto-detect entirely
-    with CTWIN_NO_UNHOSTED=1 (used in tests for deterministic behaviour)."""
-    if _truthy(os.environ.get("CTWIN_NO_UNHOSTED")):
+    else None. Overridable with UA_UNHOSTED_BASE; disable auto-detect entirely
+    with UA_NO_UNHOSTED=1 (used in tests for deterministic behaviour)."""
+    if _truthy(os.environ.get("UA_NO_UNHOSTED") or os.environ.get("CTWIN_NO_UNHOSTED")):
         return None
-    base = os.environ.get("CTWIN_UNHOSTED_BASE", "").strip() or UNHOSTED_BASE
+    base = (os.environ.get("UA_UNHOSTED_BASE") or os.environ.get("CTWIN_UNHOSTED_BASE") or "").strip() or UNHOSTED_BASE
     try:
         import urllib.request
         root = base.rsplit("/v1", 1)[0]
@@ -67,10 +67,10 @@ def openai_base_url(cfg: dict[str, Any] | None = None) -> str | None:
     """Return the configured OpenAI-compatible base URL, or None if not enabled.
 
     Priority: explicit env/config → a running **Unhosted** daemon (auto) → LM
-    Studio (if CTWIN_USE_LMSTUDIO). Returns None otherwise so the OpenAI backend
+    Studio (if UA_USE_LMSTUDIO). Returns None otherwise so the OpenAI backend
     stays off by default.
     """
-    env = os.environ.get("CTWIN_OPENAI_BASE")
+    env = (os.environ.get("UA_OPENAI_BASE") or os.environ.get("CTWIN_OPENAI_BASE"))
     if env and env.strip():
         return env.strip()
     cfg = cfg or {}
@@ -86,7 +86,7 @@ def openai_base_url(cfg: dict[str, Any] | None = None) -> str | None:
     unh = unhosted_base_url()
     if unh:
         return unh
-    if _truthy(os.environ.get("CTWIN_USE_LMSTUDIO")):
+    if _truthy((os.environ.get("UA_USE_LMSTUDIO") or os.environ.get("CTWIN_USE_LMSTUDIO"))):
         return DEFAULT_OPENAI_BASE
     return None
 
@@ -94,7 +94,7 @@ def openai_base_url(cfg: dict[str, Any] | None = None) -> str | None:
 def openai_label(cfg: dict[str, Any] | None = None) -> str:
     """The short provider label used as the model-id prefix. 'unhosted' when the
     backend is a running Unhosted daemon, else config/env, else 'lmstudio'."""
-    env = os.environ.get("CTWIN_OPENAI_LABEL")
+    env = (os.environ.get("UA_OPENAI_LABEL") or os.environ.get("CTWIN_OPENAI_LABEL"))
     if env and env.strip():
         return env.strip()
     cfg = cfg or {}
@@ -103,7 +103,7 @@ def openai_label(cfg: dict[str, Any] | None = None) -> str:
         return block["label"].strip()
     # if we resolved to Unhosted's endpoint, label it as such
     base = openai_base_url(cfg)
-    if base and base == (os.environ.get("CTWIN_UNHOSTED_BASE", "").strip() or UNHOSTED_BASE):
+    if base and base == ((os.environ.get("UA_UNHOSTED_BASE") or os.environ.get("CTWIN_UNHOSTED_BASE") or "").strip() or UNHOSTED_BASE):
         return "unhosted"
     return DEFAULT_OPENAI_LABEL
 
