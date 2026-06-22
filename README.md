@@ -67,6 +67,15 @@ def weather(city: str) -> str:
 Local-first. Web access is **off by default** (`UA_WEB=1` to enable). The file
 tools are sandboxed to `~/.unhosted-assistant/workspace`. Nothing is uploaded.
 
+## Tests
+
+```bash
+python tests/test_assistant.py
+```
+
+Offline tests (a mock model client) cover the agent loop, model routing (safety-first
+ordering), and the skill gates (web off by default, sandboxed file access).
+
 ## License
 
 MIT.
