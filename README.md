@@ -1,5 +1,7 @@
 # Unhosted Assistant
 
+![CI](https://github.com/unhosted-ai/assistant/actions/workflows/ci.yml/badge.svg)
+
 A clean, **local-first AI assistant** that runs on your own hardware. It talks to
 a local model — your own [Unhosted](https://github.com/unhosted-ai) cluster if
 it's running (auto-detected), else [Ollama](https://ollama.com), else any
