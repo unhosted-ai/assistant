@@ -1,3 +1,11 @@
+> ## 🅿️ Parked — past project
+>
+> Unhosted was built to a working state as an experiment in owning your own AI
+> inference, but it never found a real use case as an app. It is **parked**: kept
+> public as a reference and a parts bin, no longer actively developed. The design,
+> the trust-mode architecture and the writeup remain here for anyone who wants them.
+> — [Writeup on sinhaankur.com](https://www.sinhaankur.com/lab/unhosted)
+
 # Unhosted Assistant
 
 ![CI](https://github.com/unhosted-ai/assistant/actions/workflows/ci.yml/badge.svg)
